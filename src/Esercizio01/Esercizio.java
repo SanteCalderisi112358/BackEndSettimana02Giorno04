@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import com.github.javafaker.Faker;
 
@@ -101,13 +102,21 @@ public class Esercizio {
 			return new Product(id, name, category, price);
 		};
 
+		List<Product> products = new ArrayList<Product>();
+		for (int i = 0; i < 100; i++) {
+			products.add(productSupplier.get());
+		}
+		for (Product product : products) {
+			// System.out.println(product);
+		}
+
 		List<Customer> customers = new ArrayList<>();
 		for (int i = 0; i < 10; i++) {
 			customers.add(customersSupplier.get());
 		}
 
 		for (Customer customer : customers) {
-			List<Product> products = new ArrayList<>();
+			List<Product> productsForCustomer = new ArrayList<>();
 			for (int i = 0; i < 5; i++) {
 				products.add(productSupplier.get());
 			}
@@ -116,11 +125,18 @@ public class Esercizio {
 			LocalDate deliveryDate = orderDate.plusDays(7);
 
 			Order order = new Order(orderDate, deliveryDate, products, customer);
-			System.out.println("Prodotti per il cliente " + customer.getName() + ":");
-			products.forEach(p -> System.out.println(p));
-			System.out.println("Ordine per il cliente " + customer.getName() + ":");
-			System.out.println(order);
-			System.out.println();
+//			System.out.println("Prodotti per il cliente " + customer.getName() + ":");
+//			products.forEach(p -> System.out.println(p));
+//			System.out.println("Ordine per il cliente " + customer.getName() + ":");
+//			System.out.println(order);
+//			System.out.println();
 		}
+		List<Product> expensiveBooks = products.stream()
+				.filter(product -> product.getCategory() == Category.BOOK && product.getPrice() > 80)
+				.collect(Collectors.toList());
+		for (Product product : expensiveBooks) {
+			System.out.println(product);
+		}
+
 	}
 }
